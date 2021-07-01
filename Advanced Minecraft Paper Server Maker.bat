@@ -1,6 +1,8 @@
 @echo off
 echo Loading...
 color f
+set version=0.0.1
+SET currentPath=%~dp0
 title Advanced Minecraft Paper Server Maker
 timeout 1 /nobreak >nul
 >nul 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system"
@@ -25,6 +27,7 @@ Ping www.google.nl -n 1 -w 1000 >nul
 if errorlevel 1 (set internet=n) else (set internet=y)
 timeout 1 /nobreak >nul
 IF %internet%==n call:noInternet
+
 
 Rem this programm will try to generate a start.bat with a java version between min and max if existing, otherwise ask to install
 
@@ -518,6 +521,25 @@ Ping www.google.nl -n 1 -w 1000 >nul
 if errorlevel 1 (set internet=n) else (set internet=y)
 if %internet%==n goto noInternet
 goto:EOF
+
+:checkForUpdates
+if exist "%appdata%\version.txt" del "%appdata%\version.txt"
+curl -s -L -o "%appdata%\version.txt" "%https://raw.githubusercontent.com/Kotsasmin/Advanced_Minecraft_Paper_Server_Maker/main/version.txt"
+set newVersion=<%appdata%\version.txt
+if newVersion==%version% goto:EOF
+cls
+SET /p newInstall= There is a new version of this software: %newVersion% Do you want to download it? (y/n):
+IF [%newInstall%]==[] GOTO javaHomeIn
+IF NOT [%newInstall%]==[y] IF NOT [%newInstall%]==[n] GOTO newInstall
+SET newInstallation=%newInstall%
+if %newInstallation%==n goto:EOF
+cls
+echo Downloading new version...
+curl -s -L -o "%currentPath%Advanced Minecraft Paper Server Maker (%newVersion%).bat" "https://raw.githubusercontent.com/Kotsasmin/Advanced_Minecraft_Paper_Server_Maker/main/Advanced%20Minecraft%20Paper%20Server%20Maker.bat"
+timeout 1 /nobreak >nul
+start "%currentPath%Advanced Minecraft Paper Server Maker (%newVersion%).bat"
+exit
+
 
 
 :Exit
