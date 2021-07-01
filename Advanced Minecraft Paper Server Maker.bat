@@ -33,6 +33,9 @@ Rem this programm will try to generate a start.bat with a java version between m
 
 SET currentPath=%~dp0
 
+call:checkForUpdates
+
+
 net session >nul 2>&1
 IF [%errorLevel%]==[0] (
 cls
