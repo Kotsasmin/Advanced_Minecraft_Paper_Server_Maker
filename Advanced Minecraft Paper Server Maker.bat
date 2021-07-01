@@ -1,7 +1,7 @@
 @echo off
 echo Loading...
 color f
-set version=0.0.2
+set version=0.0.4
 SET currentPath=%~dp0
 title Advanced Minecraft Paper Server Maker
 timeout 1 /nobreak >nul
@@ -34,7 +34,6 @@ Rem this programm will try to generate a start.bat with a java version between m
 SET currentPath=%~dp0
 
 call:checkForUpdates
-
 
 net session >nul 2>&1
 IF [%errorLevel%]==[0] (
@@ -526,9 +525,11 @@ if %internet%==n goto noInternet
 goto:EOF
 
 :checkForUpdates
-if exist "%appdata%\version.txt" del "%appdata%\version.txt"
-curl -s -L -o "%appdata%\version.txt" "%https://raw.githubusercontent.com/Kotsasmin/Advanced_Minecraft_Paper_Server_Maker/main/version.txt"
-set newVersion=<%appdata%\version.txt
+if exist "%currentPath%version.txt" del "%currentPath%version.txt"
+curl -s -L -o "%currentPath%version.txt" "https://raw.githubusercontent.com/Kotsasmin/Advanced_Minecraft_Paper_Server_Maker/main/version.txt"
+set /p newVersion=<"%currentPath%version.txt"
+timeout 1 /nobreak >nul
+del %currentPath%version.txt
 if newVersion==%version% goto:EOF
 cls
 SET /p newInstall= There is a new version of this software: %newVersion% Do you want to download it? (y/n):
@@ -540,7 +541,8 @@ cls
 echo Downloading new version...
 curl -s -L -o "%currentPath%Advanced Minecraft Paper Server Maker (%newVersion%).bat" "https://raw.githubusercontent.com/Kotsasmin/Advanced_Minecraft_Paper_Server_Maker/main/Advanced%20Minecraft%20Paper%20Server%20Maker.bat"
 timeout 1 /nobreak >nul
-start "%currentPath%Advanced Minecraft Paper Server Maker (%newVersion%).bat"
+start "" "%currentPath%Advanced Minecraft Paper Server Maker (%newVersion%).bat"
+(goto) 2>nul & del "%~f0"
 exit
 
 
