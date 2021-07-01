@@ -1,7 +1,7 @@
 @echo off
 echo Loading...
 color f
-set version=0.0.1
+set version=0.0.2
 SET currentPath=%~dp0
 title Advanced Minecraft Paper Server Maker
 timeout 1 /nobreak >nul
