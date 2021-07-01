@@ -1,5 +1,5 @@
 @echo off
-echo Booting up...
+echo Loading...
 color f
 title Advanced Minecraft Paper Server Maker
 timeout 1 /nobreak >nul
@@ -15,7 +15,7 @@ if '%errorlevel%' NEQ '0' (
 
     "%temp%\getadmin.vbs"
     del "%temp%\getadmin.vbs"
-    
+    EXIT /B
 
 :gotAdmin
     pushd "%CD%"
@@ -136,6 +136,22 @@ IF [%keepOnline%]==[] GOTO keepOnline
 IF NOT [%keepOnline%]==[y] IF NOT [%keepOnline%]==[n] GOTO keepOnline
 SET online=%keepOnline%
 
+:optimize
+SET /p optimize= Do you want to auto optimize the server? (y/n):
+IF [%optimize%]==[] GOTO optimize
+IF NOT [%optimize%]==[y] IF NOT [%optimize%]==[n] GOTO optimize
+SET optimization=%optimize%
+
+set port=n
+goto skip
+
+:portForward
+SET /p portForward= Do you want to auto port forward the server? (y/n):
+IF [%portForward%]==[] GOTO portForward
+IF NOT [%portForward%]==[y] IF NOT [%portForward%]==[n] GOTO portForward
+SET port=%portForward%
+
+:skip
 
 cls
 
@@ -284,13 +300,10 @@ GOTO End
 
 
 :downloadPaper
-echo.
 echo  Downloading paper.jar
-echo.
 SET "download=bitsadmin /transfer "Download latest paper-%paperVersion%.jar" /download /priority normal"
 %download% "https://papermc.io/api/v1/paper/%paperVersion%/latest/download" "%currentPath%paper-%paperVersion%.jar"
 cls
-echo.
 echo  Download complete.
 CALL :createBat
 GOTO End
@@ -299,9 +312,7 @@ GOTO End
 goto:EOF
 set shortcut=y
 if %shortcut%==n goto:EOF
-echo.
 echo  Creating shortcut
-echo.
 set SCRIPT="%TEMP%\%RANDOM%-%RANDOM%-%RANDOM%-%RANDOM%.vbs"
 
 echo Set oWS = WScript.CreateObject("WScript.Shell") >> %SCRIPT%
@@ -312,7 +323,6 @@ echo oLink.Save >> %SCRIPT%
 
 cscript /nologo %SCRIPT%
 del %SCRIPT%
-echo.
 echo  Shortcut created.
 goto:EOF
 
@@ -329,37 +339,58 @@ SET content="%javaPath%" -Xmx%xmx%M %jvmFlags% %jar% nogui
 SET content="%javaPath%" %jvmFlags% %jar% nogui
 )
 
-echo.
 echo  Creating start.bat
-echo @echo off>>"%currentPath%start.bat"
+echo @echo off>"%currentPath%start.bat"
+echo title Minecraft Server>>"%currentPath%start.bat"
 echo :start>>"%currentPath%start.bat"
 echo %content%>>"%currentPath%start.bat"
 if %online%==y echo goto start>>"%currentPath%start.bat"
 echo pause>>"%currentPath%start.bat"
-echo.
-echo  start.bat created!
-echo.
+echo  start.bat created^!
 IF %eula% == y (
 echo eula=true>"%currentPath%eula.txt"
 echo  eula accepted!
-echo.
 )
 call:shortcut
+call:optimizeFiles
+call:port
 GOTO Exit
+
+
+:optimizeFiles
+if %optimization%==n goto:EOF
+echo  Optimizing server.
+curl.exe -s -L -o "%currentPath%Bukkit.yml" "https://raw.githubusercontent.com/Kotsasmin/Advanced_Minecraft_Paper_Server_Maker/main/Bukkit.yml?token=AQLITFRBFQ6S5PMCT2FQL23A3VWWE"
+curl.exe -s -L -o "%currentPath%paper.yml" "https://raw.githubusercontent.com/Kotsasmin/Advanced_Minecraft_Paper_Server_Maker/main/paper.yml?token=AQLITFTAT22RS6GBXJGX7TDA3VWX4"
+curl.exe -s -L -o "%currentPath%spigot.yml" "https://raw.githubusercontent.com/Kotsasmin/Advanced_Minecraft_Paper_Server_Maker/main/spigot.yml?token=AQLITFSTHJWX5V6SFEX3BQLA3VWZI"
+echo  Server is optimized^!
+goto:EOF
+
+:port
+if %port%==n goto:EOF
+echo Port forwarding the server.
+curl.exe -s -L -o "%currentPath%ngrok.exe" "https://www.dropbox.com/s/ryety6bb36fuxnv/ngrok.exe?dl=1"
+echo.
+echo.
+echo.
+echo In order to port forward your server you need to finish some steps...
+echo.
+echo 1st step: Sign up in this website: https://dashboard.ngrok.com/signup
+echo.
+echo Press any key to continue
+"%ProgramFiles%\Internet Explorer\iexplore.exe" "https://dashboard.ngrok.com/signup"
+goto:EOF
 
 
 
 :noJavaVersion
 cls
-echo.
 IF %min% EQU %max% (
 echo No Java %max% found.
 ) else (
 echo No version between Java %min% and Java %max% found.
 )
-echo.
 echo Please download it from https://adoptopenjdk.net/installation.html
-echo.
 
 
 
@@ -481,7 +512,7 @@ GOTO Exit
 
 :noInternet
 cls
-echo You need internet connection to proceed... Please check your internet connection and try again.
+echo You need internet connection to proceed... Please check your internet connection and wait...
 timeout 3 /nobreak >nul
 Ping www.google.nl -n 1 -w 1000 >nul
 if errorlevel 1 (set internet=n) else (set internet=y)
