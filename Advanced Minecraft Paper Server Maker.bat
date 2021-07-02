@@ -1,7 +1,7 @@
 @echo off
 echo Loading...
 color f
-set version=0.0.4
+set version=0.0.5
 SET currentPath=%~dp0
 title Advanced Minecraft Paper Server Maker
 timeout 1 /nobreak >nul
@@ -160,27 +160,18 @@ SET port=%portForward%
 
 cls
 
-echo.
-echo  ---------------------------------
-echo             Settings:
-echo.
 IF %min% EQU %max% (
-echo    java version: %min%
+echo java version: %min%
 ) ELSE (
-echo    java version between %min% and %max%
+echo java version between %min% and %max%
 )
-echo    download paper.jar: %paper%
-echo    auto-accept eula: %eula%
-echo    jar-name: %jar%
-echo    24/7: %online%
+echo download paper.jar: %paper%
+echo auto-accept eula: %eula%
+echo jar-name: %jar%
+echo 24/7: %online%
 IF [%ram%]==[y] (
 echo    Xmx: %xmx%MB
 )
-echo  ---------------------------------
-echo.
-echo             created by:
-echo              Kotsasmin
-echo.
 IF %min% LEQ 8 (
 echo.
 echo  --------------------------------------------------------------- WARNING ---------------------------------------------------------------
@@ -264,7 +255,7 @@ IF %min% LEQ 8 (
 		IF %minor% GEQ %min% (
 			IF %minor% LEQ %max% (
 				IF %minor% LEQ 8 (
-					echo  FOUND JAVA VERSION: %minor%
+					echo FOUND JAVA VERSION: %minor%
 
 					IF %paper%==y (
 						CALL :downloadPaper
@@ -286,7 +277,7 @@ IF %min% LEQ 8 (
 )
 IF %major% GEQ %min% (
 	IF %major% LEQ %max% (
-		echo  FOUND JAVA VERSION: %major%
+		echo FOUND JAVA VERSION: %major%
 		IF %paper%==y (
 			CALL :downloadPaper
 			GOTO End
@@ -305,11 +296,9 @@ GOTO End
 
 
 :downloadPaper
-echo  Downloading paper.jar
-SET "download=bitsadmin /transfer "Download latest paper-%paperVersion%.jar" /download /priority normal"
-%download% "https://papermc.io/api/v1/paper/%paperVersion%/latest/download" "%currentPath%paper-%paperVersion%.jar"
-cls
-echo  Download complete.
+echo Downloading paper.jar
+curl.exe -# -L -o "%currentPath%paper-%paperVersion%.jar" "https://papermc.io/api/v1/paper/%paperVersion%/latest/download"
+echo Download complete.
 CALL :createBat
 GOTO End
 
@@ -344,37 +333,46 @@ SET content="%javaPath%" -Xmx%xmx%M %jvmFlags% %jar% nogui
 SET content="%javaPath%" %jvmFlags% %jar% nogui
 )
 
-echo  Creating start.bat
+call:port
+echo Creating start.bat
 echo @echo off>"%currentPath%start.bat"
 echo title Minecraft Server>>"%currentPath%start.bat"
 echo :start>>"%currentPath%start.bat"
+::if %ported%==y echo taskkill /f /im ngrok.exe>>"%currentPath%start.bat"
+::if %ported%==y echo start port.bat>>"%currentPath%start.bat"
 echo %content%>>"%currentPath%start.bat"
+if %online%==y echo timeout 10>>"%currentPath%start.bat"
 if %online%==y echo goto start>>"%currentPath%start.bat"
 echo pause>>"%currentPath%start.bat"
-echo  start.bat created^!
+echo start.bat created^!
 IF %eula% == y (
 echo eula=true>"%currentPath%eula.txt"
-echo  eula accepted!
+echo eula accepted!
 )
 call:shortcut
 call:optimizeFiles
-call:port
 GOTO Exit
 
 
 :optimizeFiles
-if %optimization%==n goto:EOF
-echo  Optimizing server.
+if %optimization%==n set %ported%=n & goto:EOF
+echo Optimizing server.
 curl.exe -s -L -o "%currentPath%Bukkit.yml" "https://raw.githubusercontent.com/Kotsasmin/Advanced_Minecraft_Paper_Server_Maker/main/Bukkit.yml?token=AQLITFRBFQ6S5PMCT2FQL23A3VWWE"
 curl.exe -s -L -o "%currentPath%paper.yml" "https://raw.githubusercontent.com/Kotsasmin/Advanced_Minecraft_Paper_Server_Maker/main/paper.yml?token=AQLITFTAT22RS6GBXJGX7TDA3VWX4"
 curl.exe -s -L -o "%currentPath%spigot.yml" "https://raw.githubusercontent.com/Kotsasmin/Advanced_Minecraft_Paper_Server_Maker/main/spigot.yml?token=AQLITFSTHJWX5V6SFEX3BQLA3VWZI"
-echo  Server is optimized^!
+(
+echo maxt-tick-time=10
+echo view-distance=6
+)>%currentPath%server.properties
+echo Server is optimized^!
 goto:EOF
 
 :port
 if %port%==n goto:EOF
-echo Port forwarding the server.
-curl.exe -s -L -o "%currentPath%ngrok.exe" "https://www.dropbox.com/s/ryety6bb36fuxnv/ngrok.exe?dl=1"
+::curl.exe -s -L -o "%currentPath%ngrok.exe" "https://www.dropbox.com/s/ryety6bb36fuxnv/ngrok.exe?dl=1"
+
+timeout 1 /nobreak >nul
+
 echo.
 echo.
 echo.
@@ -382,9 +380,40 @@ echo In order to port forward your server you need to finish some steps...
 echo.
 echo 1st step: Sign up in this website: https://dashboard.ngrok.com/signup
 echo.
-echo Press any key to continue
-"%ProgramFiles%\Internet Explorer\iexplore.exe" "https://dashboard.ngrok.com/signup"
+echo Press any key to continue...
+start https://dashboard.ngrok.com/signup
+pause>nul
+echo.
+echo.
+echo 2nd step: Go to this website: https://dashboard.ngrok.com/get-started/setup
+echo.
+echo Press any key to continue...
+start https://dashboard.ngrok.com/get-started/setup
+pause>nul
+echo.
+echo.
+echo 3rd step: Copy the authtoken from the website. It will be something like
+echo           this: 2uiQ1I5fW76kFu6PSKIRaPTGRi8_3VsXUkt1rwbkiZtT6ZQBS (only the authtoken^!)
+echo.
+echo Press any key to continue...
+pause>nul
+echo.
+set /p "auth=4th step: Paste here the auth token: "
+echo.
+echo Trying to port forward the server...
+curl.exe -s -L -o "%currentPath%ngrok.zip" "https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-windows-amd64.zip"
+powershell -Command Expand-Archive -Path "%currentPath%ngrok.zip" -DestinationPath "%currentPath%ngrok.exe"
+%currentPath%ngrok.exe authtoken %auth%
+::%currentPath%ngrok.exe tcp -region eu 25565
+echo @echo off>%currentPath%port.bat
+echo title Port forwarder
+echo echo Please wait...>>%currentPath%port.bat
+echo timeout 120 /nobreak >nul>>%currentPath%port.bat
+echo ngrok.exe\ngrok.exe tcp -region eu 25565>>%currentPath%port.bat
+set ported=y
+echo The server has been port forwarded^!
 goto:EOF
+
 
 
 
@@ -457,11 +486,14 @@ CALL :downloadJDK %link%
 IF NOT EXIST "C:\Java" (
 md C:\Java
 )
-SET "download=bitsadmin /transfer "Download Java %downloadJavaVersion% JDK" /download /priority normal"
-%download% "%1" "C:\Java\jdk-%downloadJavaVersion%.zip"
+cls
+echo Downloading Java...
+curl.exe -# -L -o "C:\Java\jdk-%downloadJavaVersion%.zip" "%1"
+echo Download completed^!
+echo Installing Java
 
 powershell -Command Expand-Archive -Path "C:\Java\jdk-%downloadJavaVersion%.zip" -DestinationPath "C:\Java"
-
+timeout 1 /nobreak >nul
 del "C:\Java\jdk-%downloadJavaVersion%.zip"
 
 IF %downloadJavaVersion%==8 (
@@ -483,7 +515,7 @@ SET "folder=jdk-16.0.1+9"
 )
 cls
 echo.
-echo Downloaded Java %downloadJavaVersion%
+echo Installed Java %downloadJavaVersion%
 
 SET "javaPath=C:\Java\%folder%\bin\java.exe"
 
@@ -530,7 +562,7 @@ curl -s -L -o "%currentPath%version.txt" "https://raw.githubusercontent.com/Kots
 set /p newVersion=<"%currentPath%version.txt"
 timeout 1 /nobreak >nul
 del %currentPath%version.txt
-if newVersion==%version% goto:EOF
+if %newVersion%==%version% goto:EOF
 cls
 SET /p newInstall= There is a new version of this software: %newVersion% Do you want to download it? (y/n):
 IF [%newInstall%]==[] GOTO javaHomeIn
@@ -546,9 +578,13 @@ start "" "%currentPath%Advanced Minecraft Paper Server Maker (%newVersion%).bat"
 exit
 
 
+:ti
+set currentTime=%time:~0,-3%
+goto:EOF
+
 
 :Exit
-echo  Programm will exit now
+echo Press any key to exit
 echo.
 PAUSE
 EXIT
@@ -557,3 +593,4 @@ GOTO eof
 
 
 :End
+                                                
