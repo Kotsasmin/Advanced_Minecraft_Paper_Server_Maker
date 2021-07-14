@@ -5,10 +5,6 @@ This bat aims to create a start.bat while optionally installing the latest paper
 
 * * *
 
-<h3 align="center"> <a href="https://minecraft-start-bat-creator-download.l4zs.de">Download</a></h3>
-
-* * *
-
 ### Features:
 
 Feature | without Administrator | with Administrator
