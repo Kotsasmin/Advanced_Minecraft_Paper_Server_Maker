@@ -1,27 +1,10 @@
 @echo off
 echo Loading...
 color f
-set version=0.0.5
+set version=0.0.7
 SET currentPath=%~dp0
 title Advanced Minecraft Paper Server Maker
 timeout 1 /nobreak >nul
->nul 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system"
-if '%errorlevel%' NEQ '0' (
-    goto UACPrompt
-) else ( goto gotAdmin )
-
-:UACPrompt
-    echo Set UAC = CreateObject^("Shell.Application"^) > "%temp%\getadmin.vbs"
-    set params = %*:"=""
-    echo UAC.ShellExecute "cmd.exe", "/c %~s0 %params%", "", "runas", 1 >> "%temp%\getadmin.vbs"
-
-    "%temp%\getadmin.vbs"
-    del "%temp%\getadmin.vbs"
-    EXIT /B
-
-:gotAdmin
-    pushd "%CD%"
-    CD /D "%~dp0"
 :start
 Ping www.google.nl -n 1 -w 1000 >nul
 if errorlevel 1 (set internet=n) else (set internet=y)
