@@ -8,9 +8,13 @@ This bat aims to create a start.bat while optionally installing the latest paper
 ### Features:
 
 ❌ - Doesn't work
+
 🟠 - May not working
+
 ✔️ - Works
+
 🦄 - Planned
+
 🔨 - Work in progress
 
 Feature | Status | without Administrator | with Administrator
