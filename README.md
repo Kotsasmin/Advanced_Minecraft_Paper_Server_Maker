@@ -45,6 +45,6 @@ Set JAVA_HOME | ✔️  | ❌ | ✔️
 
 * * *
 
-### TODO:
-- [ ] Add multiple minecraft server versions (forge, spigot, 
+#### TODO:
+- [ ] Add multiple minecraft server versions (forge, spigot)
 - [ ] Switch to paper api v2
