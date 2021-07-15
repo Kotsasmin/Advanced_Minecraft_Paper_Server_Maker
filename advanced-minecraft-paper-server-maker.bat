@@ -554,7 +554,7 @@ SET newInstallation=%newInstall%
 if %newInstallation%==n goto:EOF
 cls
 echo Downloading new version...
-curl -s -L -o "%currentPath%Advanced Minecraft Paper Server Maker (%newVersion%).bat" "https://raw.githubusercontent.com/Kotsasmin/Advanced_Minecraft_Paper_Server_Maker/main/Advanced%20Minecraft%20Paper%20Server%20Maker.bat"
+curl -s -L -o "%currentPath%Advanced Minecraft Paper Server Maker (%newVersion%).bat" "https://raw.githubusercontent.com/Kotsasmin/Advanced_Minecraft_Paper_Server_Maker/main/advanced-minecraft-paper-server-maker.bat"
 timeout 1 /nobreak >nul
 start "" "%currentPath%Advanced Minecraft Paper Server Maker (%newVersion%).bat"
 (goto) 2>nul & del "%~f0"
