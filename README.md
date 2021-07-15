@@ -37,6 +37,7 @@ Edit server.properties | 🦄  | ❌ | ❌
 Use aikar flags | ✔️  | ✔️ | ✔️
 Updateable | ✔️  | 🟠 | ✔️
 Automatically accept eula | ✔️  | ✔️ | ✔️
+Migrate any server | 🔨  | ❌ | ❌
 Multiple server types | 🦄  | ❌ | ❌
 Download paper.jar | ✔️  | 🟠 | ✔️
 Download java jdk | ✔️  | 🟠 | ✔️
