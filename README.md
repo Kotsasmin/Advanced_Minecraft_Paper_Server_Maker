@@ -15,7 +15,7 @@ optimize the server | 🟠 | ✔️
 set -Xms and -Xmx values | ✔️ | ✔️
 edit server.properties | ❌ | ❌
 use aikar flags | ✔️ | ✔️
-updateable | ✔️ | ✔️
+updateable | 🟠 | 🟠
 automatically accept eula | ✔️ | ✔️
 download paper.jar | 🟠 | ✔️
 download java jdk | 🟠 | ✔️
