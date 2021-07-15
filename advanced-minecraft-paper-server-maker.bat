@@ -1,7 +1,7 @@
 @echo off
 echo Loading...
 color f
-set version=0.0.8
+set version=0.0.9.1
 SET currentPath=%~dp0
 title Advanced Minecraft Paper Server Maker
 timeout 1 /nobreak >nul
@@ -40,7 +40,7 @@ IF [%admin%]==[n] (
 GOTO Exit
 )
 
-
+cd %currentPath%
 :minIn
 SET /p minIn= Enter the minimum Java Version (e.g. 16):
 IF [%minIn%]==[] GOTO minIn
@@ -130,16 +130,28 @@ IF [%optimize%]==[] GOTO optimize
 IF NOT [%optimize%]==[y] IF NOT [%optimize%]==[n] GOTO optimize
 SET optimization=%optimize%
 
+:edit_server
+SET /p edit= Do you want to edit the server settings? (gamemode, players) (y/n): 
+IF [%edit%]==[] GOTO edit_server
+IF NOT [%edit%]==[y] IF NOT [%edit%]==[n] GOTO edit_server
+SET edit=%edit%
+
+if %edit%==y call:edit_pro
+
+:edit_server
+SET /p edit= Do you want to edit the server settings? (gamemode, players) (y/n): 
+IF [%edit%]==[] GOTO edit_server
+IF NOT [%edit%]==[y] IF NOT [%edit%]==[n] GOTO edit_server
+SET edit=%edit%
+
+
 set port=n
-goto skip
 
-:portForward
-SET /p portForward= Do you want to auto port forward the server? (y/n):
-IF [%portForward%]==[] GOTO portForward
-IF NOT [%portForward%]==[y] IF NOT [%portForward%]==[n] GOTO portForward
-SET port=%portForward%
 
-:skip
+
+echo Your server is ready to get installed... Press any key to build the server...
+pause>nul
+
 
 cls
 
@@ -334,6 +346,7 @@ echo eula accepted!
 )
 call:shortcut
 call:optimizeFiles
+if %edit%==y call:edit_properties
 GOTO Exit
 
 
@@ -343,10 +356,12 @@ echo Optimizing server.
 curl.exe -s -L -o "%currentPath%Bukkit.yml" "https://raw.githubusercontent.com/Kotsasmin/Advanced_Minecraft_Paper_Server_Maker/main/Bukkit.yml?token=AQLITFRBFQ6S5PMCT2FQL23A3VWWE"
 curl.exe -s -L -o "%currentPath%paper.yml" "https://raw.githubusercontent.com/Kotsasmin/Advanced_Minecraft_Paper_Server_Maker/main/paper.yml?token=AQLITFTAT22RS6GBXJGX7TDA3VWX4"
 curl.exe -s -L -o "%currentPath%spigot.yml" "https://raw.githubusercontent.com/Kotsasmin/Advanced_Minecraft_Paper_Server_Maker/main/spigot.yml?token=AQLITFSTHJWX5V6SFEX3BQLA3VWZI"
+
 (
 echo maxt-tick-time=10
 echo view-distance=6
-)>%currentPath%server.properties
+)>>%currentPath%server.properties
+
 echo Server is optimized^!
 goto:EOF
 
@@ -389,7 +404,7 @@ powershell -Command Expand-Archive -Path "%currentPath%ngrok.zip" -DestinationPa
 %currentPath%ngrok.exe authtoken %auth%
 ::%currentPath%ngrok.exe tcp -region eu 25565
 echo @echo off>%currentPath%port.bat
-echo title Port forwarder
+echo title Port forwarder>>%currentPath%port.bat
 echo echo Please wait...>>%currentPath%port.bat
 echo timeout 120 /nobreak >nul>>%currentPath%port.bat
 echo ngrok.exe\ngrok.exe tcp -region eu 25565>>%currentPath%port.bat
@@ -559,6 +574,78 @@ timeout 1 /nobreak >nul
 start "" "%currentPath%Advanced Minecraft Paper Server Maker (%newVersion%).bat"
 (goto) 2>nul & del "%~f0"
 exit
+
+:edit_pro
+SET /p players= How many players do you want? (e.g. 20): 
+set /p server_port= Which port do you want to use? (e.g. 25565): 
+:rcon
+SET /p rcon= Do you want to enable rcon? (y/n):
+IF [%rcon%]==[] GOTO rcon
+IF NOT [%rcon%]==[y] IF NOT [%rcon%]==[n] GOTO rcon
+SET rcon=%rcon%
+:seed
+SET /p seed= Do you want to set a custom world seed? (y/n):
+IF [%seed%]==[] GOTO seed
+IF NOT [%seed%]==[y] IF NOT [%seed%]==[n] GOTO seed
+SET seed=%seed%
+if %seed%==y SET /p custom_seed= Enter the seed: 
+:gamemode
+echo 1) Survival
+echo 2) Creative
+echo 3) Adventure
+echo 4) Spectator
+set /p gamemode= Enter the number of the gamemode: 
+IF [%gamemode%]==[] GOTO gamemode
+:world_name
+SET /p world_name= Do you want to set the world's name? (y/n):
+IF [%world_name%]==[] GOTO world_name
+IF NOT [%world_name%]==[y] IF NOT [%world_name%]==[n] GOTO world_name
+SET world_name=%world_name%
+if %world_name%==y set /p "world_custom_name= Enter the world'd name: "
+echo 1) Peaceful
+echo 2) Easy
+echo 3) Normal, 
+echo 4) Hard
+set /p difficulty= Enter the number of the difficulty: 
+:whitelist
+set /p whitelist= Do you want to enable whitelist? (y/n):
+IF [%whitelist%]==[] GOTO whitelist
+IF NOT [%whitelist%]==[y] IF NOT [%whitelist%]==[n] GOTO whitelist
+SET whitelist=%whitelist%
+goto:EOF
+
+
+
+:edit_properties
+echo Saving settings...
+if %rcon%==y (set rcon=true) else (set rcon=false)
+if %whitelist%==y (set whitelist=true) else (set whitelist=false)
+
+if %gamemode%==1 set custom_gamemode=survival
+if %gamemode%==2 set custom_gamemode=creative
+if %gamemode%==3 set custom_gamemode=adventure
+if %gamemode%==4 set custom_gamemode=spectator
+
+if %difficulty%==1 set custom_difficulty=peaceful
+if %difficulty%==2 set custom_difficulty=easy
+if %difficulty%==3 set custom_difficulty=normal
+if %difficulty%==4 set custom_difficulty=hard
+
+(
+echo max-players=%players%
+echo enable-rcon=%rcon%
+echo level-seed=%custom_seed%
+echo difficulty=%custom_difficulty%
+echo gamemode=%custom_gamemode%
+echo level-name=%world_custom_name%
+echo white-list=%whitelist%
+)>>%currentPath%server.properties
+echo Settings saved^!
+goto:EOF
+
+
+
+
 
 
 :ti
