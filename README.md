@@ -7,23 +7,26 @@ This bat aims to create a start.bat while optionally installing the latest paper
 
 ### Features:
 
-Feature | without Administrator | with Administrator
-:-- | :-: | :-:
-create start.bat | ✔️ | ✔️
-search for specified java version | ✔️ | ✔️
-optimize the server | 🟠 | ✔️
-set -Xms and -Xmx values | ✔️ | ✔️
-edit server.properties | ❌ | ❌
-use aikar flags | ✔️ | ✔️
-updateable | 🟠 | 🟠
-automatically accept eula | ✔️ | ✔️
-download paper.jar | 🟠 | ✔️
-download java jdk | 🟠 | ✔️
-set JAVA_HOME | ❌ | ✔️
+❌ - Doesn't work
+🟠 - May not working
+✔️ - Works
+🦄 - Planned
+🔨 - Work in progress
 
-❌ - doesn't work
-🟠 - may cause errors
-✔️ - works
+Feature | Status | without Administrator | with Administrator
+:--| :-: | :-: | :-:
+Create start.bat | ✔️ | ✔️ | ✔️
+Search for specified java version | ✔️  | ✔️ | ✔️
+Optimize the server | ✔️  | 🟠 | ✔️
+Set -Xms and -Xmx values | ✔️  | ✔️ | ✔️
+Edit server.properties | 🦄  | ❌ | ❌
+Use aikar flags | ✔️  | ✔️ | ✔️
+Updateable | ✔️  | 🟠 | ✔️
+Automatically accept eula | ✔️  | ✔️ | ✔️
+Download paper.jar | ✔️  | 🟠 | ✔️
+Download java jdk | ✔️  | 🟠 | ✔️
+Set JAVA_HOME | ✔️  | ❌ | ✔️
+
 
 * * *
 
