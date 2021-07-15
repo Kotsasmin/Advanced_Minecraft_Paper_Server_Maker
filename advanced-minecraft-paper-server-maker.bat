@@ -138,12 +138,6 @@ SET edit=%edit%
 
 if %edit%==y call:edit_pro
 
-:edit_server
-SET /p edit= Do you want to edit the server settings? (gamemode, players) (y/n): 
-IF [%edit%]==[] GOTO edit_server
-IF NOT [%edit%]==[y] IF NOT [%edit%]==[n] GOTO edit_server
-SET edit=%edit%
-
 
 set port=n
 
