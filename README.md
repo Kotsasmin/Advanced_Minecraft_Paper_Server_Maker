@@ -32,6 +32,7 @@ Feature | Status | without Administrator | with Administrator
 Create start.bat | ✔️ | ✔️ | ✔️
 Search for specified java version | ✔️  | ✔️ | ✔️
 Optimize the server | ✔️  | 🟠 | ✔️
+Edit server settings | 🔨  | 🟠 | 🟠
 Set -Xms and -Xmx values | ✔️  | ✔️ | ✔️
 Edit server.properties | 🔨  | ❌ | ❌
 Use aikar flags | ✔️  | ✔️ | ✔️
