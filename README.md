@@ -19,7 +19,7 @@ In the future I will try to add multiple minecraft server types such as: Spigot,
 
 ❌ - Doesn't work
 
-🟠 - May not working
+🟠 - May not work
 
 ✔️ - Works
 
