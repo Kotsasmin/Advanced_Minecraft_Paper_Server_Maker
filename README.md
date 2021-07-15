@@ -33,7 +33,7 @@ Create start.bat | ✔️ | ✔️ | ✔️
 Search for specified java version | ✔️  | ✔️ | ✔️
 Optimize the server | ✔️  | 🟠 | ✔️
 Set -Xms and -Xmx values | ✔️  | ✔️ | ✔️
-Edit server.properties | 🦄  | ❌ | ❌
+Edit server.properties | 🔨  | ❌ | ❌
 Use aikar flags | ✔️  | ✔️ | ✔️
 Updateable | ✔️  | 🟠 | ✔️
 Automatically accept eula | ✔️  | ✔️ | ✔️
