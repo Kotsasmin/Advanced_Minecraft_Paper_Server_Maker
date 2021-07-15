@@ -1,9 +1,3 @@
-# Installation
-1. Download the advanced_minecraft_paper_server_maker.bat file
-2. Put it into an empty folder.
-3. Opet the advanced_minecraft_paper_server_maker.bat file.
-4. ENJOY!!!!
-
 * * *
 
 # Advanced Minecraft Paper Server Maker
@@ -13,6 +7,13 @@ In the future I will try to add multiple minecraft server types such as: Spigot,
 > ℹ️ Although this is a start.bat creator, it is capable of creating a whole paper server (just choose to download the paper.jar)
 
 * * *
+## Installation
+1. Download the advanced_minecraft_paper_server_maker.bat file
+2. Put it into an empty folder.
+3. Opet the advanced_minecraft_paper_server_maker.bat file.
+4. ENJOY!!!!
+
+
 
 ### Features:
 
