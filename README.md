@@ -36,6 +36,7 @@ Edit server settings | 🔨  | 🟠 | 🟠
 Set -Xms and -Xmx values | ✔️  | ✔️ | ✔️
 Edit server.properties | 🔨  | ❌ | ❌
 Use aikar flags | ✔️  | ✔️ | ✔️
+Auto port forward | 🔨  | ❌ | ❌
 Updateable | ✔️  | 🟠 | ✔️
 Automatically accept eula | ✔️  | ✔️ | ✔️
 Migrate any server | 🔨  | ❌ | ❌
