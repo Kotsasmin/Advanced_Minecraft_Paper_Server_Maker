@@ -38,6 +38,7 @@ Edit server.properties | 🔨  | ❌ | ❌
 Use aikar flags | ✔️  | ✔️ | ✔️
 Auto port forward | 🔨  | ❌ | ❌
 Updateable | ✔️  | 🟠 | ✔️
+Multiple servers | 🦄  | ❌ | ❌
 Automatically accept eula | ✔️  | ✔️ | ✔️
 Migrate any server | 🔨  | ❌ | ❌
 Multiple server types | 🦄  | ❌ | ❌
