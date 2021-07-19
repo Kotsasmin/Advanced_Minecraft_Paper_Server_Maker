@@ -42,6 +42,7 @@ GOTO Exit
 
 cd %currentPath%
 :minIn
+cd %currentPath%
 SET /p minIn= Enter the minimum Java Version (e.g. 16):
 IF [%minIn%]==[] GOTO minIn
 SET /a param=%minIn%+0
